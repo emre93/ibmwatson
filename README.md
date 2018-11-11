@@ -1,5 +1,9 @@
 # CloudConstable AI assistant for Volumio
 
+## Description
+- The project can send audio stream to the cloudapp and then send to the STT services of IBM Watson. If the keyword is detected by STT, Assistant will answer the user in appropriate way.
+- The answer will be receieved by client and then send to the Volumio backend to control the Music player by voice command.
+
 ## Install Prerequisites
 
 Prerequisites:
