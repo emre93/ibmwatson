@@ -37,8 +37,4 @@ You will be able to ask to AI for commands like:
 
 3- Run the html file in Google Chrome otherwise, it may complain about the microphone access. In order to see the Transcription and Assistant answer, you need to right click and hit Inspect. On the left side choose Console and you will see the Transcriptions and assistant answers.
 
-## Unity
 
--The Avatar is in Idle mode and the camera is rotating. So that after certain time  you may not be able to see the avatar.
--There is only one implementation for the Avatar for LipSync in order to trigger Lipsync. You can ask the AI assistant : Hey Emily (or James or viola), can you tell me a joke. 
-- The avatar should answer : I did not understand what you mean.. because we did not implement the joke node into our AI assistant. If the Assistant dont understand what you meaning, the avatar will speak. 
