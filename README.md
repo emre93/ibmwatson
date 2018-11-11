@@ -1,1 +1,40 @@
-# ibmwatson
+# CloudConstable AI assistant for Volumio
+
+## Install Prerequisites
+
+Prerequisites:
+
+-Make sure nodejs 8.0 installed and the required libraries are installed for the javascript file.
+- For windows machine install the git bash recommended in order to use the nodejs
+
+In Git, direct the folder which contain the volumio_cloud_and_html_connection.js
+and install the required libraries.
+
+Required libraries are: -npm install io
+                        -npm install http
+                        -npm install ws
+
+- Make sure you change the IP address of Raspberry Pi in volumio_cloud_and_html.js file.
+
+
+## Run
+
+1- Run volumio_cloud_and_html_connection.js first and then run the html file.
+2- After you give the access for microphone in html file.  First Keyword should be detected and the keywords are: Emily , James or viola. Either of them are detected assistant will be activated and will do the commands that you ask for. 
+
+You will be able to ask to AI for commands like:
+   
+
+          Hey Emily, Can you play thriller by Michael Jackson. ----It does not mandatory to say the artist name.
+          Hey Emily, Can you skip the song, or previous the song.
+          so the commands are ; mute, unmute, stop-pause(smart stop), play, set the volume to certain level, turn up the volume and turn down the volume.
+
+   NOTE:   For the prototype purposes, The search function uses  only Spotify Premium account if you dont have it, it wont work.
+
+3- Run the html file in Google Chrome otherwise, it may complain about the microphone access. In order to see the Transcription and Assistant answer, you need to right click and hit Inspect. On the left side choose Console and you will see the Transcriptions and assistant answers.
+
+## Unity
+
+-The Avatar is in Idle mode and the camera is rotating. So that after certain time  you may not be able to see the avatar.
+-There is only one implementation for the Avatar for LipSync in order to trigger Lipsync. You can ask the AI assistant : Hey Emily (or James or viola), can you tell me a joke. 
+- The avatar should answer : I did not understand what you mean.. because we did not implement the joke node into our AI assistant. If the Assistant dont understand what you meaning, the avatar will speak. 

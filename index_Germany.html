@@ -1,0 +1,410 @@
+<!-- 
+<!DOCTYPE html>
+
+<script src="https://cdn.binaryjs.com/0/binary.js"></script>
+
+<script type="text/javascript">
+
+
+var session = {
+  audio: true,
+  video: false
+};
+var recordRTC = null;
+navigator.getUserMedia(session, initializeRecorder, onError);
+
+function initializeRecorder(stream) {
+  var audioContext = window.AudioContext;
+  var context = new audioContext();
+  var audioInput = context.createMediaStreamSource(stream);
+  var bufferSize = 2048;
+  // create a javascript node
+  var recorder = context.createJavaScriptNode(bufferSize, 1, 1);
+  // specify the processing function
+  recorder.onaudioprocess = recorderProcess;
+  // connect stream to our recorder
+  audioInput.connect(recorder);
+  // connect our recorder to the previous destination
+  recorder.connect(context.destination);
+}
+
+
+
+var client = new BinaryClient('ws://localhost:9001');
+
+function convertFloat32ToInt16(buffer) {
+  l = buffer.length;
+  buf = new Int16Array(l);
+  while (l--) {
+    buf[l] = Math.min(1, buffer[l])*0x7FFF;
+  }
+  return buf.buffer;
+}
+
+function recorderProcess(e) {
+  var left = e.inputBuffer.getChannelData(0);
+  window.Stream.write(convertFloat32ToInt16(left));
+}
+
+client.on('open', function() {
+	console.log("Connected !! ")
+  // for the sake of this example let's put the stream in the window
+  window.Stream = client.createStream();
+});
+
+</script>
+
+
+</html>  -->
+
+<!doctype html>
+<html>
+  <head>
+    <title>Stream audio</title>
+    <meta charset="utf-8">
+    <script src="https://rawgit.com/binaryjs/binaryjs/master/dist/binary.min.js"></script>
+ <!--    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"> </script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    
+
+    <script>
+
+
+    	var localstream;
+    	var source_ref;
+    	var proc_ref;
+    	var audioContext_ref;
+    	var denem;
+    	var vad1 = null;
+
+    	    // conectar al servidor BinaryJS en el puerto 9000
+    var client = new BinaryClient('ws://wsaidemo-iiacc.eu-de.mybluemix.net');
+    client.on('open', function() {
+  // for the sake of this example let's put the stream in the window
+  	window.Stream = client.createStream();
+
+  client.on('stream', function(stream, meta){
+  		//var parts= [];
+  		stream.on('data',function(data) {
+  			//parts.push(data);
+  			console.log(data);
+  			var check_the_data = data.split(" ");
+  			console.log(check_the_data[0]);
+  			//data = denem;
+  			//console.log(data.length);
+  			//console.log(typeof data);
+		var isnum = /^\d+$/.test(data);
+  			//console.log("It shows we are here ");
+  			if (data === 'play') {
+  				ws.send(data);
+  				console.log("We are here ");
+  				//console.log(denem);
+  			}
+  			else if (data === 'mute') {
+  				ws.send(data);
+  				console.log("Muted");
+  			}
+  			else if (data === 'unmute') {
+  				ws.send(data);
+  				console.log("UnMuted");
+  			}
+  				else if (data === '+') {
+  				ws.send(data);
+  				console.log("Volume up");
+  				//ws.send('AA');
+  			}
+  				else if (data === '-') {
+  				ws.send(data);
+  				console.log("Volume down");
+  			}
+  				else if (data === 'pause') {
+  				ws.send(data);
+  				console.log("Paused or Stopped");
+  			}
+				else if (data === 'stop') {
+  				ws.send(data);
+  				console.log("Stopped");
+
+  			}
+  				else if (data === 'next') {
+  				ws.send(data);
+  				console.log("Next song is playing");
+  			}
+  				else if (data === 'prev') {
+  				ws.send(data);
+  				console.log("Previous Song is playing");
+  			}
+  				else if (isnum) {
+  				ws.send(data);
+  				console.log(data);
+  			}
+
+
+  			/////////check the music name
+  					else if (check_the_data[0] === 'search') {
+                   
+
+					var song_name = data.split("and ").pop();
+
+					ws.send(data);
+					console.log(song_name);
+				}
+
+	////////////////////check the music name code ends
+
+
+
+////////////////check the artist name 
+	else if (check_the_data[0] === 'artist') {
+                   
+
+					var artist_name = data.split("and ").pop();
+
+					ws.send(data);
+					console.log(artist_name);
+				}
+	////////////check the artist name code ends
+
+
+///////Text to speech websocket connection to send the text for weather info to the TTS 
+
+ 	
+				else if (check_the_data[0] === 'weather') {
+                   
+
+					var location = data.split("and ").pop();
+
+					ws.send('weather');
+					console.log(location);
+				}
+	
+
+///////////text to speech websocket connection ends here
+
+	//setTimeout(function(){ x.play();}, 3000);
+
+
+
+  		});
+
+  		      stream.on('end', function(){
+  		      	console.log("Binayjs websocket is closing");
+});
+        
+      });
+});
+
+    client.on('close', function(){
+
+    	client.close();
+
+    });
+
+
+//////////testing timeout for websocket
+var timerID = 0; 
+function keepAlive() { 
+    var timeout = 20000;  
+    if (client.readyState == webSocket.OPEN) {  
+        client.send('');  
+    }  
+    timerId = setTimeout(keepAlive, timeout);  
+}  
+function cancelKeepAlive() {  
+    if (timerId) {  
+        clearTimeout(timerId);  
+    }  
+}
+//////////////
+
+
+    // client.on('close', function(){
+
+    // 	client.close();
+    // });
+
+
+     var ws = new WebSocket('ws://localhost:1000');	
+	ws.onopen = function() {
+  	//console.log('Opened connection ');
+ //ws.send(denem);
+ console.log("Connection made for Volumio");
+};
+
+ws.onmessage = function (message) {
+
+	//console.log('message received', message);
+
+	if (message.data === 'audio')
+		{
+			console.log('audio triggered');
+
+			//var x = document.getElementById("myAudio").autoplay; 
+
+			setTimeout(function(){ 
+
+
+			var myAudio = $("#song")[0];
+
+				myAudio.play();
+
+				myAudio.onended= function() {
+					ws.send('audended');
+
+			}
+
+			}, 2000);
+
+			
+
+		}
+
+		else if (message.data === 'AA') {
+
+			ws.send('AA');
+		}
+
+}
+
+ws.onclose = function () {
+
+	console.log("closed");
+}
+
+   var session = {
+  audio: true,
+  video: false
+	};
+	var recordRTC = null;
+	navigator.getUserMedia(session, initializeRecorder, onError);
+
+	function onError(e) {
+
+		console.log("ErroR:" + e);
+	}
+
+	function initializeRecorder(stream) {
+		var x;
+		localstream = stream;
+  var audioContext = window.AudioContext || window.webkitAudioContext;
+  var context = new audioContext();
+  audioContext_ref = context;
+  var audioInput = context.createMediaStreamSource(stream);
+  var bufferSize = 2048;
+
+  source_ref = audioInput;
+
+  var recorder = context.createScriptProcessor(2048, 1, 1);
+  proc_ref = recorder;
+  // specify the processing function
+    	recorder.onaudioprocess = recorderProcess;
+  // connect stream to our recorder
+  		audioInput.connect(recorder);
+  // connect our recorder to the previous destination
+  		recorder.connect(context.destination);
+
+
+  	// 	  var options = {
+   //   source: source_ref,
+   //   voice_stop: function() {
+
+   //   	setTimeout(function(){ vad1 = false; }, 1000);
+   //     console.log('voice_stop');
+   //     //console.log(vad1);
+   // }, 
+
+   //   voice_start: function() {
+   //   	vad1 = true;
+   //   	console.log('voice_start');
+   //   	//console.log(vad1);	
+   //   	}
+   //  }; 
+    
+   //  // Create VAD
+   //  var vad = new VAD(options);
+
+
+
+
+
+}
+
+
+
+
+// function Vaddetection(e) {
+
+// 	if (vad1) {
+
+// 		 var left = e.inputBuffer.getChannelData(0);
+// 		 denem = convertFloat32ToInt16(left);
+// 		recorderProcess();
+
+// 	}
+// 	else if (vad1 === false) {
+
+// 		//console.log("Doing Nothing");
+// 	}
+     	
+// }
+
+
+
+
+function convertFloat32ToInt16(buffer) {
+  l = buffer.length;
+  buf = new Int16Array(l);
+  //console.log("Conversion is happening");
+  while (l--) {
+    buf[l] = Math.min(1, buffer[l])*0x7FFF;
+  }
+  return buf.buffer;
+}
+
+//convertFloat32ToInt16(left)
+
+function recorderProcess(e) {
+  
+   var left = e.inputBuffer.getChannelData(0);
+	denem = convertFloat32ToInt16(left);
+  window.Stream.write(denem); 
+
+
+  //console.log("Recording...");
+  //console.log(convertFloat32ToInt16(left));
+}
+
+  function stopmic() {
+      source_ref.disconnect(proc_ref);
+      proc_ref.disconnect(audioContext_ref.destination);
+     
+         if (localstream.getAudioTracks().length && localstream.getAudioTracks()[0].stop) {
+        localstream.getAudioTracks().forEach(function(track) {
+            track.stop();
+        });
+    }
+
+    //var end_recognition = client.send(JSON.stringify(event, null, 2));
+  }
+ 
+
+
+    </script> 
+
+
+  
+
+    <div class="Microphone">
+    <button 
+
+    class="btn btn-default aibutton"
+      ng-mouseenter="hover = 'Microphone button'"
+      ng-mouseleave="hover = ''"
+      ng-click = ""
+    onclick="stopmic() " > Stop Streaming </button>
+ 
+  
+</div>
+    
+  </head>
+</html>
